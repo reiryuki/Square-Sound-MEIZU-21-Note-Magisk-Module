@@ -38,7 +38,7 @@
 
 ## Known Issues
 - 3D sound effects, Power Bass, Pure Voice, & Live Music doesn't work.
-- You need to re-on/off EQ toggler if switching between EQ profiles
+- You need to re-off/on EQ toggler if switching between EQ profiles
 
 ## Support & Bug Report
 - https://t.me/androidryukimodsdiscussions/2618
