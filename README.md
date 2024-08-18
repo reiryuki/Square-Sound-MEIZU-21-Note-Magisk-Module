@@ -1,0 +1,1 @@
+# Square-Sound-MEIZU-21-Note-Magisk-Module
