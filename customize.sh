@@ -8,6 +8,9 @@ LIST32BIT=`grep_get_prop ro.product.cpu.abilist32`
 if [ ! "$LIST32BIT" ]; then
   LIST32BIT=`grep_get_prop ro.system.product.cpu.abilist32`
 fi
+if [ ! "$LIST32BIT" ]; then
+  [ -f /system/lib/libandroid.so ] && LIST32BIT=true
+fi
 
 # log
 if [ "$BOOTMODE" != true ]; then
@@ -57,9 +60,8 @@ else
 fi
 ui_print " "
 
-# architecture
-NAME=arm64
-NAME2=arm
+# function
+architecture() {
 if [ "$ARCH" == $NAME ]; then
   ui_print "- $ARCH architecture"
   ui_print " "
@@ -80,17 +82,53 @@ else
   ui_print "  This module is only for $NAME or $NAME2 architecture."
   abort
 fi
+}
+architecture_2() {
+if [ "$LIST32BIT" ]; then
+  if [ "$ARCH" == $NAME ]; then
+    ui_print "- $ARCH architecture"
+    ui_print " "
+    ui_print "- 32 bit library support"
+    ui_print " "
+  elif [ "$ARCH" == $NAME2 ]; then
+    ui_print "- $ARCH architecture"
+    rm -rf `find $MODPATH -type d -name *64*`
+    ui_print " "
+  else
+    ui_print "! Unsupported $ARCH architecture."
+    ui_print "  This module is only for $NAME or $NAME2 architecture."
+    abort
+  fi
+  if [ "$AUDIO64BIT" ]; then
+    ui_print "! This module uses 32 bit audio service only"
+    ui_print "  But this ROM uses 64 bit audio service"
+    abort
+  fi
+else
+  abort "! This ROM doesn't support 32 bit library"
+fi
+}
 
-# sdk
+# sdk & architechture
 NUM=28
+NAME=arm64
+NAME2=arm
+AUDIO64BIT=`grep linker64 /*/bin/hw/*hardware*audio*`
 if [ "$API" -lt $NUM ]; then
   ui_print "! Unsupported SDK $API."
   ui_print "  You have to upgrade your Android version"
   ui_print "  at least SDK $NUM to use this module."
   abort
+elif [ "$API" -eq $NUM ]; then
+  ui_print "- SDK $API"
+  ui_print " "
+  cp -rf $MODPATH/system_9/* $MODPATH/system
+  rm -rf $MODPATH/system/vendor/lib64
+  architecture_2
 else
   ui_print "- SDK $API"
   ui_print " "
+  architecture
 fi
 
 # recovery
@@ -148,6 +186,7 @@ if [ "$BOOTMODE" == true ]; then
   done
 fi
 remove_sepolicy_rule
+rm -rf $MODPATH/system_9
 ui_print " "
 
 # function
