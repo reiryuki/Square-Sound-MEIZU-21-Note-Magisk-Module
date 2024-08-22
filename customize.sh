@@ -60,6 +60,9 @@ else
 fi
 ui_print " "
 
+# recovery
+mount_partitions_in_recovery
+
 # function
 architecture() {
 if [ "$ARCH" == $NAME ]; then
@@ -130,9 +133,6 @@ else
   ui_print " "
   architecture
 fi
-
-# recovery
-mount_partitions_in_recovery
 
 # magisk
 magisk_setup

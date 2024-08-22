@@ -1,7 +1,7 @@
 id=SquareSound
 name=Square Sound MEIZU 21 Note
-version=v0.2
-versionCode=2
+version=v0.3
+versionCode=3
 author=Rei Ryuki the Fixer
 description=Equalizer global type sound effects ported from MEIZU 21 Note (Meizu21Note) for any Android 9 (SDK 28) and up, ARM64 or ARM architecture.
 
