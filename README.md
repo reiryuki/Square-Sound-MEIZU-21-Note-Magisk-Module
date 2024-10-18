@@ -13,13 +13,13 @@
 ## Sources
 - https://dumps.tadiphone.dev/dumps/meizu/meizu21note qssi-user-14-UKQ1.230917.001-1711913844-release-keys
 - system_9: https://dumps.tadiphone.dev/dumps/meizu/meizu16spro meizu_16sPro_CN-user-9-PKQ1.190616.001-1572446663-release-keys
-- libmagiskpolicy.so: Kitsune Mask R65C33E4F
+- libmagiskpolicy.so: Kitsune Mask R6687BB53
 
 ## Screenshots
 - https://t.me/ryukinotes/18
 
 ## Requirements
-- ARM64 or ARM architecture
+- arm64-v8a or armeabi-v7a architecture
 - Android 10 (SDK 29) and up
 - Android 9 (SDK 28) with 32 bit audio service (this also can be found in 64 bit ROM with 32 bit support, not only 32 bit ROM)
 - Magisk or KernelSU installed

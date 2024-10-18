@@ -4,12 +4,16 @@ ui_print " "
 # var
 UID=`id -u`
 [ ! "$UID" ] && UID=0
-LIST32BIT=`grep_get_prop ro.product.cpu.abilist32`
-if [ ! "$LIST32BIT" ]; then
-  LIST32BIT=`grep_get_prop ro.system.product.cpu.abilist32`
+ABILIST=`grep_get_prop ro.product.cpu.abilist`
+if [ ! "$ABILIST" ]; then
+  ABILIST=`grep_get_prop ro.system.product.cpu.abilist`
 fi
-if [ ! "$LIST32BIT" ]; then
-  [ -f /system/lib/libandroid.so ] && LIST32BIT=true
+ABILIST32=`grep_get_prop ro.product.cpu.abilist32`
+if [ ! "$ABILIST32" ]; then
+  ABILIST32=`grep_get_prop ro.system.product.cpu.abilist32`
+fi
+if [ ! "$ABILIST32" ]; then
+  [ -f /system/lib/libandroid.so ] && ABILIST32=true
 fi
 
 # log
@@ -65,58 +69,62 @@ mount_partitions_in_recovery
 
 # function
 architecture() {
-if [ "$ARCH" == $NAME ]; then
-  ui_print "- $ARCH architecture"
-  ui_print " "
-  if [ "$LIST32BIT" ]; then
-    ui_print "- 32 bit library support"
+if ! echo "$ABILIST" | grep -q $NAME; then
+  if echo "$ABILIST" | grep -q $NAME2; then
+    rm -rf `find $MODPATH/system -type d -name *64*`
   else
-    ui_print "- Doesn't support 32 bit library"
-    rm -rf $MODPATH/armeabi-v7a $MODPATH/system*/lib\
-     $MODPATH/system*/vendor/lib
+    if [ "$BOOTMODE" == true ]; then
+      ui_print "! This ROM doesn't support $NAME nor $NAME2 architecture"
+    else
+      ui_print "! This Recovery doesn't support $NAME nor $NAME2 architecture"
+      ui_print "  Try to install via Magisk app instead"
+    fi
+    abort
   fi
-  ui_print " "
-elif [ "$ARCH" == $NAME2 ]; then
-  ui_print "- $ARCH architecture"
-  rm -rf `find $MODPATH -type d -name *64*`
-  ui_print " "
-else
-  ui_print "! Unsupported $ARCH architecture."
-  ui_print "  This module is only for $NAME or $NAME2 architecture."
-  abort
+fi
+if ! echo "$ABILIST" | grep -q $NAME2; then
+  rm -rf $MODPATH/system*/lib\
+   $MODPATH/system*/vendor/lib
+  if [ "$BOOTMODE" != true ]; then
+    ui_print "! This Recovery doesn't support $NAME2 architecture"
+    ui_print "  Try to install via Magisk app instead"
+    ui_print " "
+  fi
 fi
 }
 architecture_2() {
-if [ "$LIST32BIT" ]; then
-  if [ "$ARCH" == $NAME ]; then
-    ui_print "- $ARCH architecture"
+if ! echo "$ABILIST" | grep -q $NAME; then
+  rm -rf `find $MODPATH/system -type d -name *64*`
+  if [ "$BOOTMODE" != true ]; then
+    ui_print "! This Recovery doesn't support $NAME architecture"
+    ui_print "  Try to install via Magisk app instead"
     ui_print " "
-    ui_print "- 32 bit library support"
-    ui_print " "
-  elif [ "$ARCH" == $NAME2 ]; then
-    ui_print "- $ARCH architecture"
-    rm -rf `find $MODPATH -type d -name *64*`
-    ui_print " "
+  fi
+fi
+if ! echo "$ABILIST" | grep -q $NAME2; then
+  if [ "$BOOTMODE" == true ]; then
+    abort "! This ROM doesn't support $NAME2 architecture"
   else
-    ui_print "! Unsupported $ARCH architecture."
-    ui_print "  This module is only for $NAME or $NAME2 architecture."
+    ui_print "! This Recovery doesn't support $NAME2 architecture"
+    ui_print "  Try to install via Magisk app instead"
     abort
   fi
-  if [ "$AUDIO64BIT" ]; then
-    ui_print "! This module uses 32 bit audio service only"
-    ui_print "  But this ROM uses 64 bit audio service"
-    abort
-  fi
-else
-  abort "! This ROM doesn't support 32 bit library"
+fi
+if ! file /*/bin/hw/*hardware*audio* | grep -q 32-bit; then
+  ui_print "! This module uses 32 bit audio service only"
+  ui_print "  But this ROM uses 64 bit audio service"
+  abort
 fi
 }
 
 # sdk & architechture
+if [ "$ABILIST" ]; then
+  ui_print "- $ABILIST architecture"
+  ui_print " "
+fi
 NUM=28
-NAME=arm64
-NAME2=arm
-AUDIO64BIT=`grep linker64 /*/bin/hw/*hardware*audio*`
+NAME=arm64-v8a
+NAME2=armeabi-v7a
 if [ "$API" -lt $NUM ]; then
   ui_print "! Unsupported SDK $API."
   ui_print "  You have to upgrade your Android version"
