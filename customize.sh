@@ -166,7 +166,7 @@ mv -f $MODPATH/aml.sh $MODPATH/.aml.sh
 
 # mod ui
 if [ "`grep_prop mod.ui $OPTIONALS`" == 1 ]; then
-  APP=MZFX
+  APP=FlymeMusicFX
   FILE=/data/media/"$UID"/$APP.apk
   DIR=`find $MODPATH/system -type d -name $APP`
   ui_print "- Using modified UI apk..."
