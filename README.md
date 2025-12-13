@@ -22,11 +22,11 @@
 - arm64-v8a or armeabi-v7a architecture
 - Android 10 (SDK 29) and up
 - Android 9 (SDK 28) with 32 bit audio service (this also can be found in 64 bit ROM with 32 bit support, not only 32 bit ROM)
-- Magisk or KernelSU installed
+- Magisk or Kitsune Mask or KernelSU or Apatch installed
 - Earphone/headphone connected
 
 ## Installation Guide & Download Link
-- Install this module https://www.pling.com/p/2191396/ via Magisk app or KernelSU app or Recovery if Magisk installed and download FlymeMusic.apk
+- Install this module https://www.pling.com/p/2191396/ via Magisk app or Kitsune Mask app or KernelSU app or Apatch app or Recovery if Magisk or Kitsune Mask installed and download FlymeMusic.apk
 - Install AML Magisk Module https://t.me/ryukinotes/34 only if using any other else audio mod module
 - If you are using KernelSU, you need to disable Unmount Modules by Default in KernelSU app settings
 - Reboot

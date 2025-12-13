@@ -19,7 +19,8 @@ else
   SERVER=mediaserver
 fi
 killall $SERVER\
- android.hardware.audio@4.0-service-mediatek
+ android.hardware.audio@4.0-service-mediatek\
+ android.hardware.audio.service
 
 # wait
 sleep 20
@@ -87,9 +88,6 @@ else
     magisk magiskhide rm $PKG
   done
 fi
-
-# audio flinger
-#DMAF=`dumpsys media.audio_flinger`
 
 # function
 stop_log() {
